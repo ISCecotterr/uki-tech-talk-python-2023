@@ -1,0 +1,21 @@
+# VS Code
+.vscode
+
+# venv
+pyvenv.cfg
+Include
+Lib
+Scripts
+webapp/DEADapp.py
+webapp/__pycache__
+share
+
+# Driver
+intersystems_irispython-3.2.0-py3-none-any.whl
+
+# Other
+test
+iris.key
+
+# Demo
+Graph.png

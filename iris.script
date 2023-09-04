@@ -1,0 +1,19 @@
+    // Setting up namespaces and compiling sources
+    d $SYSTEM.OBJ.Load("/opt/irisapp/Installer.cls", "ck")
+    s sc = ##class(App.Installer).Setup()
+
+    // Setting up Users
+    zn "%SYS"
+    d ##class(Security.Users).UnExpireUserPasswords("*")
+    d ##class(Security.Users).AddRoles("UnknownUser",("%All")) // Allowing unauthenticated access to REST APIs
+    d EnableDeepSee^%SYS.cspServer("/csp/UKI-PYTHON-DEV/")
+
+    // Setting up Production in namespace
+    zn "UKI-PYTHON-DEV"
+    d ##class(EnsLib.PEX.Utils).RegisterComponent("FlaskPEXInboundAdapter", "%Python Server", "/opt/webapp/flask_pex_inbound_adapter.py",,"Demo.PEX.FlaskInboundAdapter")
+    d ##class(EnsLib.PEX.Utils).RegisterComponent("FlaskPEXService", "%Python Server", "/opt/webapp/flask_pex_service.py:/opt/webapp/flask_pex_message.py",,"Demo.PEX.FlaskPEXService")
+    s ^Ens.AutoStart = "Demo.Production"
+    s ^Ens.AutoStart("StartupPriority") = 0
+
+    // End script
+    h
