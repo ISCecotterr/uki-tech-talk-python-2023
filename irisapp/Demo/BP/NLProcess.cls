@@ -19,8 +19,11 @@ Method OnRequest(pRequest As Demo.Msg.NLPRequest, Output pResponse As %Persisten
 ClassMethod HFNLPSentimentAnalysis(pContent As %String) As %Boolean [ Language = python ]
 {
     from transformers import pipeline
+    import os
 
-    task = pipeline("text-classification", model="cardiffnlp/twitter-roberta-base-sentiment-latest")
+    os.environ['TRANSFORMERS_CACHE'] = '/opt/huggingface/cache'
+
+    task = pipeline("text-classification", model="cardiffnlp/twitter-roberta-base-sentiment-latest", cache_dir="/opt/cache")
     example_str = "Please consult a healthcare professional immediately to assess your condition and discuss appropriate treatment options to mitigate these risks."
     resp = task(pContent)
 

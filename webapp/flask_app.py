@@ -14,7 +14,7 @@ def get_test():
     iris_status = "OK"
     flask_status = "OK"
     try:
-        test_conn = iris.connect(hostname='localhost', port=1972, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='sys')
+        test_conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
         test_conn.close()
     except Exception as ex:
         iris_status = str(ex)
@@ -26,7 +26,7 @@ def get_test():
 def post_person():
     #
     # Step 0: Connect to IRIS over native API:
-    conn = iris.connect(hostname='localhost', port=1972, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='sys')
+    conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
     IRIS = iris.createIRIS(conn)
     #
     # Step 1: Persist the data from the POST payload.
@@ -57,7 +57,7 @@ def post_person():
 def get_person(patient_id: str):
     #
     # Step 0: Connect to IRIS over native API:
-    conn = iris.connect(hostname='localhost', port=1972, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='sys')
+    conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
     IRIS = iris.createIRIS(conn)
     #
     # Step 1: Verify records exist via DB-API (using the same IRIS connection object):
@@ -84,7 +84,7 @@ def get_person(patient_id: str):
 def update_person(patient_id: str, encounter_id: str):
     #
     # Step 0: Connect to IRIS over native API:
-    conn = iris.connect(hostname='localhost', port=1972, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='sys')
+    conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
     IRIS = iris.createIRIS(conn)
     #
     # Step 1: Verify records exist for this Patient and Encounter
@@ -131,7 +131,7 @@ def update_person(patient_id: str, encounter_id: str):
 def delete_person(patient_id: str, encounter_id: str):
     #
     # Step 0: Connect to IRIS over native API:
-    conn = iris.connect(hostname='localhost', port=1972, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='sys')
+    conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
     IRIS = iris.createIRIS(conn)
     #
     # Step 1: Verify records already exist in the IRIS DB
@@ -151,7 +151,7 @@ def delete_person(patient_id: str, encounter_id: str):
 #
 if __name__ == '__main__':
     try: 
-        conn = iris.connect(hostname='localhost', port=1972, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='sys')
+        conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
         conn.close()
     except Exception as ex:
         print("Connection to IRIS failed: " + str(ex))

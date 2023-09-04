@@ -1,6 +1,4 @@
 /// 
-/// 
-
 Class Demo.Cube.Observations Extends %DeepSee.CubeDefinition [ DependsOn = Demo.Data.Observations, ProcedureBlock ]
 {
 

@@ -3,7 +3,7 @@ import iris
 import matplotlib.pyplot as plt
 
 def build_dataframe() -> pandas.DataFrame:
-    conn = iris.connect(hostname='localhost', port=1972, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='sys')
+    conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
 
     cursor = conn.cursor()
     cursor.execute("""
