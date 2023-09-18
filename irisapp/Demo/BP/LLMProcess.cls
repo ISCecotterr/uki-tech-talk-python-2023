@@ -43,13 +43,15 @@ ClassMethod GPT35Process(patientid As %String) As %String [ Language = python ]
 
     rs = iris.sql.exec(f"SELECT TOP 10 DateF, Code, Description, Value, Units, Type FROM Demo_Data.Observations WHERE Patient = '{patientid}' ORDER BY ID DESC")
     
-    content = "In a maximum of 100 words, please give advice for this recent patient assuming they do not have medical knowledge. Do not include disclaimers about being a Large Language Model. Provide urgent advice based on their measurements, especially if they are at risk."
+    content = "Succinctly explain the significance of these patient observations to someone does not have medical knowledge. Do not include disclaimers about being an LLM. Summarise your advice the final sentence. If their conditions seem serious, advise them to urgently seek help in the final short sentence."
     for idx, row in enumerate(rs):
-        text = ' Description: ' + str(row[3]) + ', with the value: ' + str(row[4]) + ' ' + str(row[5]) + '.'
+        text = ' Description: ' + str(row[2]) + ', with the value: ' + str(row[3]) + ' ' + str(row[4]) + '.'
         content += text
+    
+    print(content)
 
     chatgpt_response = openai.ChatCompletion.create(model="gpt-3.5-turbo-16k-0613", messages=[{"role":"user", "content": content}])
-    return str(chatgpt_response['choices'][0]['message']['content']).strip()
+    return str(chatgpt_response['choices'][0]['message']['content']).replace("\n","")
 }
 
 Method OnResponse(request As Ens.Request, ByRef response As Ens.Response, callrequest As Ens.Request, callresponse As Ens.Response, pCompletionKey As %String) As %Status

@@ -1,3 +1,6 @@
+    // Activate license key
+    d $SYSTEM.License.LoadAppLicenseFile("/opt/iris.key")
+    
     // Setting up namespaces and compiling sources
     d $SYSTEM.OBJ.Load("/opt/irisapp/Installer.cls", "ck")
     s sc = ##class(App.Installer).Setup()
@@ -14,6 +17,9 @@
     d ##class(EnsLib.PEX.Utils).RegisterComponent("FlaskPEXService", "%Python Server", "/opt/webapp/flask_pex_service.py:/opt/webapp/flask_pex_message.py",,"Demo.PEX.FlaskPEXService")
     s ^Ens.AutoStart = "Demo.Production"
     s ^Ens.AutoStart("StartupPriority") = 0
+
+    // Set your OpenAI API key as the string value here:
+    s ^openai.key = "My-OpenaAi-API-Key"
 
     // End script
     h

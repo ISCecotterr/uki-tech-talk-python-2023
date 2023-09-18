@@ -5,7 +5,7 @@ Property ID As %String;
 
 Property NLPResult As %Boolean;
 
-Property LLMResult As %String(MAXLEN = 1000);
+Property LLMResult As %String(MAXLEN = "");
 
 Storage Default
 {

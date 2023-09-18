@@ -10,12 +10,11 @@ webapp/DEADapp.py
 webapp/__pycache__
 share
 
-# Driver
-intersystems_irispython-3.2.0-py3-none-any.whl
-
 # Other
+misc
 test
 iris.key
+uki-2023-python-development.zip
 
 # Demo
 Graph.png

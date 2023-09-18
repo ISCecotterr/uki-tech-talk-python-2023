@@ -3,7 +3,7 @@ Class Demo.Msg.NLPRequest Extends Ens.Request
 
 Property ID As %String;
 
-Property Message As %String(MAXLEN = 1000);
+Property Message As %String(MAXLEN = "");
 
 Storage Default
 {

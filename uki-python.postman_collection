@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "91cda5b9-f114-46e4-ac0d-e5e3b36f7805",
+		"name": "uki-python-tech-talk",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20811993"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/person",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Body Height\", \"Value\":\"175\", \"Units\": \"cm\", \"Type\": \"Numeric\"},\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Body Weight\", \"Value\":\"128\", \"Units\": \"kg\", \"Type\": \"Numeric\"},\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Pain severity - 0-10 verbal numeric rating [Score] - Reported\", \"Value\":2.0, \"Units\": \"{score}\", \"Type\": \"Numeric\"},\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Weight-for-length Per age and sex\", \"Value\":\"80.0\", \"Units\": \"%\", \"Type\": \"Numeric\"},\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Head Occipital-frontal circumference\", \"Value\":\"46.9\", \"Units\": \"cm\", \"Type\": \"Numeric\"},\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Diastolic Blood Pressure\", \"Value\":\"180\", \"Units\": \"mm[Hg]\", \"Type\": \"Numeric\"},\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Systolic Blood Pressure\", \"Value\":\"130\", \"Units\": \"mm[Hg]\", \"Type\": \"Numeric\"},\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Heart Rate\", \"Value\":\"115\", \"Units\": \"/min\", \"Type\": \"Numeric\"},\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Respiratory Rate\", \"Value\":\"13.0\", \"Units\": \"/min\", \"Type\": \"Numeric\"},\r\n    {\"Date\":\"2019-08-01\", \"Patient\":\"Demo-DryRun\", \"Encounter\":\"Demo-Encounter-3\", \"Code\": \"DEMO\", \"Description\": \"Tobacco smoking status NHS\", \"Value\":\"smoker\", \"Units\": \"\", \"Type\": \"text\"}\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/person",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"person"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,20 +1,28 @@
 from flask import Flask, jsonify, request
-import sys
+import sys, os, atexit
 import iris
 import iris.pex
-from flask_pex_service import FlaskPEXService
-from flask_pex_message import FlaskPEXMessage
 
-# -- Initialise Flask app -- #
+# Initialise Flask app
 app = Flask(__name__)
 
-# -- Define URL routes for Flask app -- #
+# Define IRIS connection arguments from environment variables defined in docker-compose.yml
+hostname = os.environ['IRIS_HOST']
+port = int(os.environ['IRIS_PORT'])
+namespace = os.environ['IRIS_NAMESPACE']
+username = os.environ['IRIS_USERNAME']
+password = os.environ['IRIS_PASSWORD']
+
+# Instantiate these objects when __name__ == '__main__'
+conn: iris.IRISConnection
+pexserv: iris.pex._BusinessService
+
 @app.route('/test/', methods=['GET'])
 def get_test():
     iris_status = "OK"
     flask_status = "OK"
     try:
-        test_conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
+        test_conn = iris.connect(hostname, port, namespace, username, password)
         test_conn.close()
     except Exception as ex:
         iris_status = str(ex)
@@ -26,7 +34,6 @@ def get_test():
 def post_person():
     #
     # Step 0: Connect to IRIS over native API:
-    conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
     IRIS = iris.createIRIS(conn)
     #
     # Step 1: Persist the data from the POST payload.
@@ -42,13 +49,10 @@ def post_person():
         record_id = iris_record.invoke("%Id") # Get row ID for saved object from IRIS DB
         iris_record.close()
     #
-    # Step 2: Instantiate the PEX Service, from which we can submit messages.
-    pexserv = iris.pex.Director.CreateBusinessService(conn, "Demo.PEX.FlaskPEXService")
+    # Step 2: Submit messages over PEX Business Service (pexserv).
     print('\n\n' + "POST " + str(patient_id) + '\n\n')
     response = pexserv.ProcessInput(patient_id)
-    IRIS.classMethodBoolean(className="Ens.Director", methodName="RestartProduction")
-    IRIS.close() # Release IRIS obj
-    conn.close()
+    IRIS.close()
     return response
 
 # GET
@@ -57,7 +61,6 @@ def post_person():
 def get_person(patient_id: str):
     #
     # Step 0: Connect to IRIS over native API:
-    conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
     IRIS = iris.createIRIS(conn)
     #
     # Step 1: Verify records exist via DB-API (using the same IRIS connection object):
@@ -68,14 +71,10 @@ def get_person(patient_id: str):
         return jsonify({'Error':'Patient ID not found.'})
     cursor.close()
     #
-    # Step 2: Instantiate the PEX Service, from which we can submit messages.
-    pexserv = iris.pex.Director.CreateBusinessService(conn, "Demo.PEX.FlaskPEXService")
-    pexrequest = FlaskPEXMessage(patient_id)
-    print('\n\n' + "GET " + str(pexrequest.id) + '\n\n')
+    # Step 2: Submit messages over PEX Business Service (pexserv).
+    print('\n\n' + "GET " + str(patient_id) + '\n\n')
     response = pexserv.ProcessInput(patient_id)
-    IRIS.classMethodBoolean(className="Ens.Director", methodName="RestartProduction")
-    IRIS.close() # Release IRIS obj
-    conn.close()
+    IRIS.close()
     return response
 
 # PUT
@@ -84,7 +83,6 @@ def get_person(patient_id: str):
 def update_person(patient_id: str, encounter_id: str):
     #
     # Step 0: Connect to IRIS over native API:
-    conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
     IRIS = iris.createIRIS(conn)
     #
     # Step 1: Verify records exist for this Patient and Encounter
@@ -115,14 +113,10 @@ def update_person(patient_id: str, encounter_id: str):
             print(ex)
             pass
     #
-    # Step 3: Instantiate the PEX Service, from which we can submit messages.
-    pexserv = iris.pex.Director.CreateBusinessService(conn, "Demo.PEX.FlaskPEXService")
-    pexrequest = FlaskPEXMessage(patient_id)
-    print('\n\n' + "POST " + str(pexrequest.id) + '\n\n')
-    response = pexserv.ProcessInput(record_id)
-    IRIS.classMethodBoolean(className="Ens.Director", methodName="RestartProduction")
-    IRIS.close() # Release IRIS obj
-    conn.close()
+    # Step 3: Submit messages over PEX Business Service (pexserv).
+    print('\n\n' + "PUT " + str(patient_id) + '\n\n')
+    response = pexserv.ProcessInput(patient_id)
+    IRIS.close()
     return response
 
 # DELETE
@@ -131,7 +125,6 @@ def update_person(patient_id: str, encounter_id: str):
 def delete_person(patient_id: str, encounter_id: str):
     #
     # Step 0: Connect to IRIS over native API:
-    conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
     IRIS = iris.createIRIS(conn)
     #
     # Step 1: Verify records already exist in the IRIS DB
@@ -145,17 +138,42 @@ def delete_person(patient_id: str, encounter_id: str):
     # Step 2: Delete record over DB-API:
     cursor = conn.cursor()
     cursor.execute(f"DELETE FROM Demo_Data.Observations WHERE Patient = '{patient_id}' AND Encounter = '{encounter_id}'")
+    IRIS.close()
     return jsonify({"Message":"Record deleted successfully."})
 
-# -- Main call to run Flask app on host/port specified -- # 
-#
-if __name__ == '__main__':
-    try: 
-        conn = iris.connect(hostname='localhost', port=51773, namespace='UKI-PYTHON-DEV', username='_SYSTEM', password='SYS')
+def create_business_service(connection, target):
+    irisInstance = iris.IRIS(connection)
+    irisobject = irisInstance.classMethodObject("EnsLib.PEX.Director","dispatchCreateBusinessService",target)
+    service = iris.pex._IRISBusinessService.__new__(iris.pex._IRISBusinessService)
+    service.__init__()
+    service.irisHandle = irisobject
+    return service
+
+# This function is registered by atexit.register() to run when user quits Flask app.
+# Note: sys.exit() will not call this even after being registered.
+def shutdown():
+    try:
         conn.close()
+    except Exception:
+        pass
+
+if __name__ == '__main__':
+    try: # Connect to IRIS
+        conn = iris.connect(hostname, port, namespace, username, password)
+        atexit.register(shutdown) # Register shutdown method to close IRIS connection on termination.
     except Exception as ex:
         print("Connection to IRIS failed: " + str(ex))
         sys.exit()
-    finally:
+    try: # Instantiate Business Service (creates a new Job on IRIS)
+        pexserv = create_business_service(conn, "Demo.PEX.FlaskPEXService")
+    except Exception as ex:
+        conn.close()
+        print("PEX Error! Have you started your production? " + str(ex))
+        sys.exit()
+    try: # Start Flask app
         app.run(host='0.0.0.0', port=8080)
-
+    except Exception as ex:
+        conn.close()
+        print("Flask app failed: " + str(ex))
+        sys.exit()
+        

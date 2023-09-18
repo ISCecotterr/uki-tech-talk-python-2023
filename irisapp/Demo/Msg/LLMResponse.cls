@@ -1,7 +1,7 @@
 Class Demo.Msg.LLMResponse Extends Ens.Response
 {
 
-Property Message As %String;
+Property Message As %String(MAXLEN = "");
 
 Property ID As %String;
 

@@ -9,7 +9,7 @@ Property Encounter As %String [ SqlColumnNumber = 4 ];
 
 Property Code As %String [ SqlColumnNumber = 5 ];
 
-Property Description As %String [ SqlColumnNumber = 6 ];
+Property Description As %String(MAXLEN = 250) [ SqlColumnNumber = 6 ];
 
 Property Value As %String [ SqlColumnNumber = 7 ];
 
