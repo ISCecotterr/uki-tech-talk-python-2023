@@ -19,11 +19,11 @@ This is a containerised build of the Tech Talk demo. Running the image will star
 
     I do not recommend detaching the output so that any issues flagged by the Flask server can be viewed easily.
 
-4. Set your OpenAI API key.
+4. Set your OpenAI API key. API details can be found here: https://platform.openai.com/
 
     Attach a shell to the IRIS container. You can either click "Attach Shell" via the VSCode Docker Extension, or run:
 
-    ```docker exec -it uki-2023-python-development-iris-1 sh```
+    ```docker exec -it <container-id> sh```
 
     Then enter an IRIS shell:
 
