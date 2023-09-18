@@ -18,7 +18,7 @@ COPY irisapp /opt/irisapp
 COPY webapp /opt/webapp
 COPY cubeapp /opt/cubeapp
 COPY requirements.txt /opt/requirements.txt
-COPY iris.key /usr/irissys/mgr/iris.key
+# COPY iris.key /usr/irissys/mgr/iris.key
 COPY iris.script /opt/iris.script
 
 # Start IRIS and load demo
